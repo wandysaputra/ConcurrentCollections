@@ -1,16 +1,18 @@
-﻿namespace ConcurrentDictionary;
+﻿using System.Collections.Concurrent;
+
+namespace ConcurrentDictionary;
 
 public class StockController
 {
-    private Dictionary<string, TShirt> _stock;
+    private ConcurrentDictionary<string, TShirt> _stock;
 
     public StockController(IEnumerable<TShirt> shirts)
     {
-        _stock = shirts.ToDictionary(x => x.Code);
+        _stock = new ConcurrentDictionary<string, TShirt>(shirts.ToDictionary(x => x.Code));
     }
     public void Sell(string code)
     {
-        _stock.Remove(code);
+        _stock.TryRemove(code, out _);
     }
     public TShirt SelectRandomShirt()
     {
