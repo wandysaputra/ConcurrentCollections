@@ -11,3 +11,11 @@ https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.queue-1?
 - Throw exception
 
 ![image](https://user-images.githubusercontent.com/42372928/219827556-d3d3b5e8-0a55-4b91-9e2e-14c7bdd3afc5.png)
+
+
+# [Concurrent Dictionary](  https://github.com/wandysaputra/ConcurrentCollections/blob/29538951e98314248dc87a7f10f22cfb5bc5d7bd/ConcurrentDictionary/ConcurrentDictionary.csproj)
+## Conversion Dictionary to ConcurrentDictionary
+
+StockController vs StockConcurrentController
+
+- Favor `TryXXX()` style methods, which don't presume knowledge of the state
