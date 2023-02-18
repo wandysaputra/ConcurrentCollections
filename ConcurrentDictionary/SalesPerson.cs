@@ -12,10 +12,11 @@ public class SalesPerson
         DateTime start = DateTime.Now;
         while (DateTime.Now - start < workDay)
         {
-            var result = ServeCustomer(controller);
-            if (result.Status != null)
-                Console.WriteLine($"{Name}: {result.Status}");
-            if (!result.ShirtsInStock)
+            var (shirtsInStock, status) = ServeCustomer(controller);
+            if (status != null)
+                Console.WriteLine($"{Name}: {status}");
+
+            if (!shirtsInStock)
                 break;
         }
     }
@@ -29,14 +30,51 @@ public class SalesPerson
         Thread.Sleep(Rnd.NextInt(30));
 
         // customer chooses to buy with only 20% probability
-        if (Rnd.TrueWithProb(0.2))
+        if (!Rnd.TrueWithProb(0.2))
         {
-            controller.Sell(shirt.Code);
-            return (true, $"Sold {shirt.Name}");
+            return (true, null);
         }
-        return (true, null);
+
+        controller.Sell(shirt.Code);
+        return (true, $"Sold {shirt.Name}");
     }
 
+    public void Work(TimeSpan workDay, StockConcurrentController controller)
+    {
+        DateTime start = DateTime.Now;
+        while (DateTime.Now - start < workDay)
+        {
+            var (shirtsInStock, status) = ServeCustomer(controller);
+            if (status != null)
+                Console.WriteLine($"{Name}: {status}");
+            if (!shirtsInStock)
+                break;
+        }
+    }
+    public (bool ShirtsInStock, string? Status) ServeCustomer(
+        StockConcurrentController controller)
+    {
+        var (result, shirt) = controller.SelectRandomShirt();
 
+        switch (result)
+        {
+            case SelectResult.NoStockLeft:
+                return (false, "All shirts sold");
+            case SelectResult.ChosenShirtSold:
+                return (false, "Can't show shirt to customer - already sold");
+        }
+
+        Thread.Sleep(Rnd.NextInt(30));
+
+        // customer chooses to buy with only 20% probability
+        if (!Rnd.TrueWithProb(0.2))
+        {
+            return (true, null);
+        }
+
+        return controller.Sell(shirt?.Code ?? string.Empty)
+            ? (true, $"Sold {shirt.Name}")
+            : (true, $"Can't sell {shirt.Name}: Already sold");
+    }
 
 }

@@ -4,15 +4,15 @@ namespace ConcurrentDictionary;
 
 public class StockController
 {
-    private ConcurrentDictionary<string, TShirt> _stock;
+    private Dictionary<string, TShirt> _stock;
 
     public StockController(IEnumerable<TShirt> shirts)
     {
-        _stock = new ConcurrentDictionary<string, TShirt>(shirts.ToDictionary(x => x.Code));
+        _stock = shirts.ToDictionary(x => x.Code);
     }
     public void Sell(string code)
     {
-        _stock.TryRemove(code, out _);
+        _stock.Remove(code);
     }
     public TShirt SelectRandomShirt()
     {
