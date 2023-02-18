@@ -1,4 +1,4 @@
-# ConcurrentCollections
+# [ConcurrentCollections](https://github.com/wandysaputra/ConcurrentCollections/tree/master/ConcurrentCollections)
 
 These might happens when two tasks are concurrently modifying the queue and `Queue<T>` is not `thread-safe` 
 https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.queue-1?view=net-7.0#:~:text=Any%20instance%20members%20are%20not%20guaranteed%20to%20be%20thread%20safe.
@@ -13,9 +13,27 @@ https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.queue-1?
 ![image](https://user-images.githubusercontent.com/42372928/219827556-d3d3b5e8-0a55-4b91-9e2e-14c7bdd3afc5.png)
 
 
-# [Concurrent Dictionary](  https://github.com/wandysaputra/ConcurrentCollections/blob/29538951e98314248dc87a7f10f22cfb5bc5d7bd/ConcurrentDictionary/ConcurrentDictionary.csproj)
+# [Concurrent Dictionary](https://github.com/wandysaputra/ConcurrentCollections/tree/master/ConcurrentDictionary)
 ## Conversion Dictionary to ConcurrentDictionary
 
 StockController vs StockConcurrentController
 
 - Favor `TryXXX()` style methods, which don't presume knowledge of the state
+
+
+# [Race Condition](https://github.com/wandysaputra/ConcurrentCollections/tree/master/RaceCondition)
+
+- To protect against RACE CONDITIONS requires just only one method call on the collection
+- Whenever there is multiple call on the collection there is a chance other threads can modify the collection between calls
+  
+  Examples:
+    ```
+    void SomeFunction(string code, int quantityToBuy){
+        _stock.TryAdd(code, quantityToBuy); // => method call is thread-safe
+
+        // some logic here => Risk of race condition between method calls
+
+        _stock.TryGetValue(code, out int stockLevel); // => method call is thread-safe
+    }
+
+    ```
